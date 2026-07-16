@@ -1,22 +1,33 @@
 # User CRUD API with MongoDB
 
-## Day 15 – Full Stack Developer Internship
+## Day 15 Assignment – Full Stack Developer Internship
 
-This project is a RESTful User Management API built using **Node.js**, **Express.js**, **MongoDB**, and **Mongoose**. It performs complete CRUD (Create, Read, Update, Delete) operations with MongoDB and validates user data using Mongoose.
+A RESTful API built using **Node.js**, **Express.js**, **MongoDB**, and **Mongoose**.
 
 ---
 
 ## Features
 
-- Connect Express server to MongoDB
-- Create new users
-- Fetch all users
-- Fetch user by ID
-- Update user details
-- Delete user
-- Mongoose schema validation
-- Proper API error handling
-- JSON responses
+### User Management
+- Create User
+- Get All Users
+- Get User by ID
+- Update User
+- Delete User
+
+### Product Management
+- Create Product
+- Get All Products
+- Update Product
+- Delete Product
+
+### Additional Features
+- User role (admin/user)
+- Fetch all admin users
+- Calculate average age of users
+- Mongoose validation
+- MongoDB Aggregation
+- Proper error handling
 
 ---
 
@@ -26,7 +37,7 @@ This project is a RESTful User Management API built using **Node.js**, **Express
 - Express.js
 - MongoDB
 - Mongoose
-- Postman (API Testing)
+- Postman
 
 ---
 
@@ -36,50 +47,15 @@ This project is a RESTful User Management API built using **Node.js**, **Express
 UserCRUDAPI
 │
 ├── models
-│   └── User.js
+│   ├── User.js
+│   └── Product.js
 │
 ├── node_modules
-├── .gitignore
 ├── package.json
 ├── package-lock.json
+├── .gitignore
 ├── README.md
 └── server.js
-```
-
----
-
-## Installation
-
-Clone the repository
-
-```bash
-git clone <repository-url>
-```
-
-Move into the project folder
-
-```bash
-cd UserCRUDAPI
-```
-
-Install dependencies
-
-```bash
-npm install
-```
-
-Start MongoDB locally.
-
-Run the server
-
-```bash
-node server.js
-```
-
-Server runs on
-
-```
-http://localhost:3000
 ```
 
 ---
@@ -90,115 +66,56 @@ http://localhost:3000
 mongodbpractice
 ```
 
-Collection
+Collections:
 
-```
-users
-```
-
----
-
-## API Endpoints
-
-### Home
-
-```
-GET /
-```
+- users
+- products
 
 ---
 
-### Get All Users
+## User API
 
-```
-GET /users
-```
-
----
-
-### Get User By ID
-
-```
-GET /users/:id
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /users | Fetch all users |
+| GET | /users/:id | Fetch user by ID |
+| POST | /users | Create user |
+| PUT | /users/:id | Update user |
+| DELETE | /users/:id | Delete user |
+| GET | /users/admins | Fetch all admin users |
+| GET | /users/average-age | Calculate average age |
 
 ---
 
-### Create User
+## Product API
 
-```
-POST /users
-```
-
-Example Request
-
-```json
-{
-    "name": "Rahul",
-    "email": "rahul@example.com",
-    "age": 22
-}
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /products | Fetch all products |
+| POST | /products | Create product |
+| PUT | /products/:id | Update product |
+| DELETE | /products/:id | Delete product |
 
 ---
 
-### Update User
+## Validation
 
-```
-PUT /users/:id
-```
-
-Example Request
-
-```json
-{
-    "age": 23
-}
-```
-
----
-
-### Delete User
-
-```
-DELETE /users/:id
-```
-
----
-
-## Mongoose Validation
+### User
 
 - Name is required
-- Name must contain at least 3 characters
-- Email is required
-- Email must be unique
-- Email must be in valid format
-- Age must be between 1 and 100
+- Name minimum 3 characters
+- Email is unique
+- Valid email required
+- Age between 1–100
+- Role must be:
+  - admin
+  - user
 
----
+### Product
 
-## Sample Response
-
-```json
-{
-    "_id": "64d9b24f3f2a1f9a8c123456",
-    "name": "Rahul",
-    "email": "rahul@example.com",
-    "age": 23
-}
-```
-
----
-
-## Error Handling
-
-The API returns meaningful error messages for:
-
-- Invalid Object ID
-- Validation errors
-- Duplicate email
-- User not found
-- Database errors
+- Product name required
+- Price greater than 0
+- Stock cannot be negative
 
 ---
 
@@ -213,4 +130,4 @@ The API returns meaningful error messages for:
 
 **Tanvi Satej Verlecar**
 
-Full Stack Developer Internship – Day 15
+Full Stack Developer Internship

@@ -39,6 +39,16 @@ const userSchema = new mongoose.Schema({
 
         max: [100, "Age cannot exceed 100."]
 
+    },
+
+    role: {
+
+        type: String,
+
+        enum: ["admin", "user"],
+
+        default: "user"
+
     }
 
 });

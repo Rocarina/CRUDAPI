@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 
 const User = require("./models/User");
 
+const Product = require("./models/Product");
+
 const app = express();
 
 const PORT = 3000;
@@ -86,6 +88,108 @@ app.get("/users", async (req, res) => {
 });
 
 // ======================================================
+// GET - Fetch All Admin Users
+// ======================================================
+
+app.get("/users/admins", async (req, res) => {
+
+    try {
+
+        const admins = await User.find({
+
+            role: "admin"
+
+        });
+
+        res.status(200).json(admins);
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            message: "Unable to fetch admin users.",
+
+            error: error.message
+
+        });
+
+    }
+
+});
+
+// ======================================================
+// GET - Average Age of Users
+// ======================================================
+
+app.get("/users/average-age", async (req, res) => {
+
+    try {
+
+        const result = await User.aggregate([
+
+            {
+
+                $group: {
+
+                    _id: null,
+
+                    averageAge: {
+
+                        $avg: "$age"
+
+                    },
+
+                    totalUsers: {
+
+                        $sum: 1
+
+                    }
+
+                }
+
+            }
+
+        ]);
+
+        if (result.length === 0) {
+
+            return res.status(404).json({
+
+                message: "No users found."
+
+            });
+
+        }
+
+        res.status(200).json({
+
+            message: "Average age calculated successfully.",
+
+            totalUsers: result[0].totalUsers,
+
+            averageAge: Number(result[0].averageAge.toFixed(2))
+
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            message: "Unable to calculate average age.",
+
+            error: error.message
+
+        });
+
+    }
+
+});
+
+// ======================================================
 // GET - Fetch User By ID
 // ======================================================
 
@@ -137,7 +241,9 @@ app.post("/users", async (req, res) => {
 
             email: req.body.email,
 
-            age: req.body.age
+            age: req.body.age,
+
+            role: req.body.role      // ⭐ Add this line
 
         });
 
@@ -260,6 +366,180 @@ app.delete("/users/:id", async (req, res) => {
         res.status(500).json({
 
             message: "Unable to delete user.",
+
+            error: error.message
+
+        });
+
+    }
+
+});
+
+// ======================================================
+// POST - Create Product
+// ======================================================
+
+app.post("/products", async (req, res) => {
+
+    try {
+
+        const product = new Product({
+
+            name: req.body.name,
+
+            price: req.body.price,
+
+            stock: req.body.stock
+
+        });
+
+        await product.save();
+
+        res.status(201).json({
+
+            message: "Product created successfully.",
+
+            product
+
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(400).json({
+
+            message: "Unable to create product.",
+
+            error: error.message
+
+        });
+
+    }
+
+});
+
+// ======================================================
+// GET - Fetch All Products
+// ======================================================
+
+app.get("/products", async (req, res) => {
+
+    try {
+
+        const products = await Product.find();
+
+        res.status(200).json(products);
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            message: "Unable to fetch products.",
+
+            error: error.message
+
+        });
+
+    }
+
+});
+
+// ======================================================
+// PUT - Update Product
+// ======================================================
+
+app.put("/products/:id", async (req, res) => {
+
+    try {
+
+        const updatedProduct = await Product.findByIdAndUpdate(
+
+            req.params.id,
+
+            req.body,
+
+            {
+
+                new: true,
+
+                runValidators: true
+
+            }
+
+        );
+
+        if (!updatedProduct) {
+
+            return res.status(404).json({
+
+                message: "Product not found."
+
+            });
+
+        }
+
+        res.status(200).json({
+
+            message: "Product updated successfully.",
+
+            product: updatedProduct
+
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(400).json({
+
+            message: "Unable to update product.",
+
+            error: error.message
+
+        });
+
+    }
+
+});
+
+// ======================================================
+// DELETE - Delete Product
+// ======================================================
+
+app.delete("/products/:id", async (req, res) => {
+
+    try {
+
+        const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+
+        if (!deletedProduct) {
+
+            return res.status(404).json({
+
+                message: "Product not found."
+
+            });
+
+        }
+
+        res.status(200).json({
+
+            message: "Product deleted successfully.",
+
+            product: deletedProduct
+
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            message: "Unable to delete product.",
 
             error: error.message
 
